@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Tampilan kondisi LOADING.
+import '../services/language_service.dart';
+
 class LoadingView extends StatelessWidget {
   final String message;
-  const LoadingView({super.key, this.message = 'Memuat data...'});
+  const LoadingView({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,6 @@ class LoadingView extends StatelessWidget {
   }
 }
 
-/// Tampilan kondisi ERROR dengan tombol coba lagi.
 class ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
@@ -28,24 +28,33 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wifi_off_rounded,
-                size: 72, color: Theme.of(context).colorScheme.error),
+            Icon(Icons.wifi_off_rounded, size: 56, color: colors.error),
+            const SizedBox(height: 12),
+            Text(
+              context.tr('Gagal memuat data', 'Failed to load data'),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.onSurfaceVariant),
+            ),
             const SizedBox(height: 16),
-            Text('Gagal memuat data',
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Coba Lagi'),
+              label: Text(context.tr('Coba Lagi', 'Try Again')),
             ),
           ],
         ),
@@ -54,21 +63,29 @@ class ErrorView extends StatelessWidget {
   }
 }
 
-/// Tampilan ketika data berhasil diambil tetapi hasilnya kosong.
 class EmptyView extends StatelessWidget {
   final String message;
   const EmptyView({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.search_off, size: 72, color: Colors.grey),
-          const SizedBox(height: 12),
-          Text(message, textAlign: TextAlign.center),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.search_off_rounded,
+                size: 56, color: colors.onSurfaceVariant),
+            const SizedBox(height: 12),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.onSurfaceVariant),
+            ),
+          ],
+        ),
       ),
     );
   }
